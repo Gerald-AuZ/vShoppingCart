@@ -4,7 +4,8 @@
 *   Repository: https://github.com/Gerald-AuZ/vShoppingCart
 *   License: MIT
 */
-(function (document, window) { 'use strict';
+(function (document, window) {
+    'use strict';
 
     let _this = {
         shoppingCart: JSON.parse(localStorage.getItem('vShoppingCart')) || {
@@ -14,6 +15,7 @@
         },
         updateCart: function () {
             localStorage.setItem("vShoppingCart", JSON.stringify(this.shoppingCart));
+            vShoppingCart.subscribe();
         }
     };
 
@@ -24,7 +26,7 @@
         add: function (item) {
             if (!item)
                 throw 'Can\'t add null item.';
-            if (Object.keys(item).length == 0)
+            if (Object.keys(item).length === 0)
                 throw 'Can\'t add an empty item.';
             if (!item.id)
                 throw 'Item must have an id.';
@@ -43,36 +45,49 @@
                 price: item.price,
                 discount: item.discount || 0.0,
                 quantity: item.quantity,
-                image: item.image,
-                plusOne: function () {
-                    this.quantity++;
-                    _this.shoppingCart.total += (this.price - this.discount);
-                    _this.updateCart();
-                },
-                subtractOne: function () {
-                    if (this.quantity == 1) return;
-                    this.quantity--;
-                    _this.shoppingCart.total -= (this.price - this.discount);
-                    _this.updateCart();
-                },
-                removeFromCart: function () {
-                    let index = _this.shoppingCart.items.indexOf(this);
-                    _this.shoppingCart.items.splice(index, 1);
-                    _this.updateCart();
-                }
+                image: item.image
             };
             _this.shoppingCart.items.push(_item);
             _this.shoppingCart.count++;
-            _this.shoppingCart.total += (_this.price - _this.discount);
+            _this.shoppingCart.total += (_item.price - _item.discount);
             _this.updateCart();
         },
-        count: _this.shoppingCart.count,
+        plusOne: function (id) {
+            let find = _this.shoppingCart.items.find((item) => { return item.id == id; });
+            find.quantity++;
+            _this.shoppingCart.total += (find.price - find.discount);
+            _this.updateCart();
+        },
+        subtractOne: function (id) {
+            let find = _this.shoppingCart.items.find((item) => { return item.id == id; });
+            if (find.quantity == 1) return;
+            find.quantity--;
+            _this.shoppingCart.total -= (find.price - find.discount);
+            _this.updateCart();
+        },
+        removeFromCart: function (id) {
+            let find = _this.shoppingCart.items.find((item) => { return item.id == id; });
+            let index = _this.shoppingCart.items.indexOf(find);
+            _this.shoppingCart.items.splice(index, 1);
+            _this.shoppingCart.count--;
+            _this.shoppingCart.total -= (find.price * find.quantity);
+            _this.updateCart();
+        },
         clean: function () {
             localStorage.setItem("vShoppingCart", JSON.stringify({
                 count: 0,
                 total: 0,
                 items: []
             }));
+        },
+        count: function () {
+            return _this.shoppingCart.count;
+        },
+        total: function () {
+            return _this.shoppingCart.total;
+        },
+        subscribe: function () {
+
         }
     };
 
