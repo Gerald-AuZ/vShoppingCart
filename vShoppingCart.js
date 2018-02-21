@@ -1,7 +1,7 @@
 /* 
 *   Vanilla JavaScript Shopping Cart (vShoppingCart) v0.1.0 
-*   Author: Gerald Aburto <https://github.com/Gerald-AuZ>
-*   Repository: https://github.com/Gerald-AuZ/vShoppingCart
+*   Author: Gerald Aburto <https://github.com/GeraldAburto>
+*   Repository: https://github.com/GeraldAburto/vShoppingCart
 *   License: MIT
 */
 (function (document, window) {
